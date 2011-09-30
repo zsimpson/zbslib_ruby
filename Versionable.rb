@@ -39,8 +39,7 @@ module Versionable
 		return @version_model_owner_class
 			.includes(:user)
 			.joins( @version_model_class.table_name.to_sym )
-			.select( @version_model_owner_class.table_name+".*, "+@version_model_class.table_name+".created_at as versioned_at")
-			.group( @version_model_owner_class.table_name+".id" )
+			.select( "distinct("+@version_model_class.table_name+".id), "+@version_model_owner_class.table_name+".*, "+@version_model_class.table_name+".created_at as versioned_at")
 			.order( @version_model_class.table_name+".id desc" )
 			.limit( count )
 	end
