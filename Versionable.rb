@@ -36,12 +36,24 @@ module Versionable
 	end
 
 	def version_all_recent_edits( count )
-		return @version_model_owner_class
+		owners = @version_model_owner_class
 			.includes(:user)
 			.joins( @version_model_class.table_name.to_sym )
-			.select( "distinct("+@version_model_class.table_name+".id), "+@version_model_owner_class.table_name+".*, "+@version_model_class.table_name+".created_at as versioned_at")
+			.select( @version_model_owner_class.table_name+".*, "+@version_model_class.table_name+".created_at as versioned_at")
 			.order( @version_model_class.table_name+".id desc" )
 			.limit( count )
+			
+		# For some reason I had a "select( distinct(owner_class.table_name.id) ... in here and it worked perfectly
+		# on one machine and didn't work on another with the very same mysql.  So I'm implementing the distinct by hand
+		list = []
+		seen_owners = {}
+		for i in owners
+			if ! seen_owners[ i.id ]
+				list.push( i )
+				seen_owners[ i.id ] = true
+			end
+		end
+		return list
 	end
 	
 end
