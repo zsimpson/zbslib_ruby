@@ -16,10 +16,10 @@ module Versionable
 		versions = version_get_all
 
 		# < 0 indicates latest version
-		version = version.to_i
-		if version < 0
+		if !version || version.to_i < 0
 			version = versions.length-1
 		end
+		version = version.to_i
 
 		# BOUND version
 		version = [ versions.length-1, version ].min
