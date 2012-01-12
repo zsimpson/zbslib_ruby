@@ -28,6 +28,25 @@ module Versionable
 		return versions[version], version, versions.length
 	end
 
+	def version_get_mark( version_mark )
+		# Find the newest version not newer than version_mark id
+		versions = version_get_all
+		
+		ver = -1
+		for i in versions
+			if i[:id] > version_mark
+				break
+			end
+			ver += 1
+		end
+		
+		if ver == -1
+			raise "No version older then mark"
+		end
+		
+		return versions[ver], ver, versions.length
+	end
+
 	def version_all_newest( count )
 		return @version_model_owner_class
 			.includes( :user )
