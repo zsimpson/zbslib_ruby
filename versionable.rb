@@ -13,6 +13,16 @@ module Versionable
 	end
 
 	def version_get( version )
+		# OPTIMIZE for getting latest
+		begin
+			if version == -1
+				head = @version_model_class.where( :head=>1 ).first
+				count = self.version_get_count
+				return head, count-1, count
+			end
+		rescue
+		end
+
 		versions = version_get_all
 
 		# < 0 indicates latest version
