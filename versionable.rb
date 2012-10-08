@@ -15,7 +15,7 @@ module Versionable
 	def version_get( version )
 		# OPTIMIZE for getting latest
 		begin
-			if version == -1
+			if version.to_i == -1
 				head = @version_model_class.where( @version_key_name=>self.id, :head=>1 ).first
 				count = self.version_get_count
 				return head, count-1, count
